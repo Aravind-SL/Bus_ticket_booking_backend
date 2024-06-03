@@ -1,13 +1,13 @@
 package com.acker.busticketbackend.demo;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class DemoController {
 
-    @GetMapping("/")
-    String working() {
+    @GetMapping("/demo")
+    public String working() {
         return "Working Route";
     }
 }
