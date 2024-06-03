@@ -1,5 +1,7 @@
 package com.acker.busticketbackend.auth;
 
+import com.acker.busticketbackend.exceptions.PasswordMismatchException;
+import com.acker.busticketbackend.exceptions.UserAlreadyExistException;
 import com.acker.busticketbackend.models.user.Role;
 import com.acker.busticketbackend.models.user.User;
 import com.acker.busticketbackend.models.user.UserRepository;
@@ -35,6 +37,12 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
 
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
 
         return AuthenticationResponse.builder()
                 .token(jwtService.generateToken(user))
@@ -42,8 +50,14 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request) throws Exception {
+         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new UserAlreadyExistException("User with email " + request.getEmail() + " already exists");
+        }
 
-        if (request.getPassword().equals(request.getConfirmPassword())) {
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new PasswordMismatchException("Password and Confirm Password do not match");
+        }
+
             var user = User.builder()
                     .firstName(request.getFirstName())
                     .lastName(request.getLastName())
@@ -56,10 +70,6 @@ public class AuthenticationService {
             return AuthenticationResponse.builder()
                     .token(jwtService.generateToken(user))
                     .build();
-
-        }
-
-        throw new Exception("Password and Confirm Password Doesn't Match");
 
     }
 

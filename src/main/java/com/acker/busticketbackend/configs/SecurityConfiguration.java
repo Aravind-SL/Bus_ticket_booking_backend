@@ -28,6 +28,7 @@ public class SecurityConfiguration {
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
 
     private static final String[] WHITE_LIST = {
+            "/api/v1/**",
             "/api/v1/auth/**", // For authentication
             "/demo", // Testing endpoint
             "/error", // This one right here is freaking important, DO NOT forget this at all.
