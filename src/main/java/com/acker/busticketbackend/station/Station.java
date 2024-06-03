@@ -1,6 +1,4 @@
-package com.acker.busticketbackend.buses;
-
-import java.time.LocalDateTime;
+package com.acker.busticketbackend.station;
 
 import com.acker.busticketbackend.routes.Routes;
 
@@ -9,40 +7,38 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List; 
+
 @Entity
 @Data
 @Builder
-@Table(name = "Buses")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bus {
+@Table(name = "Stations")
+public class Station {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(unique = true, nullable = false)
-    private Long busId;
-    @Column(nullable=false)
-    private int busNumber;
+    private Long stationId;
 
-    @ManyToOne
-    @JoinColumn(name = "routeID", nullable = false)
-    private Routes route;
+    @Column(nullable = false)
+    private String stationName;
 
-    @Column(nullable=false)
-    private LocalDateTime departureTime;
+    @Column(nullable = false)
+    private String state;
 
-    @Column(nullable=false)
-    private LocalDateTime arrivalTime;
+    @OneToMany(mappedBy = "fromStation")
+    private List<Routes> routesFrom;
 
-    @Column(nullable=false)
-    private int totalSeats;
+    @OneToMany(mappedBy = "toStation")
+    private List<Routes> routesTo;
 
 }

@@ -25,11 +25,11 @@ public class BusService {
     public Bus createBus(Bus bus) {
         return busRepository.save(bus);
     }
-
+    //Requires FineTuning now it requires all parameter to update 
     public Bus updateBus(Long busID, Bus busDetails) {
         Bus bus = getBusById(busID);
         bus.setBusNumber(busDetails.getBusNumber());
-        // bus.setRoute(busDetails.getRoute());
+        bus.setRoute(busDetails.getRoute());
         bus.setDepartureTime(busDetails.getDepartureTime());
         bus.setArrivalTime(busDetails.getArrivalTime());
         bus.setTotalSeats(busDetails.getTotalSeats());
