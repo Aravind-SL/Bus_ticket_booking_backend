@@ -31,12 +31,9 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        System.out.println("Hello User" + request.getEmail());
 
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
-
-        System.out.println("Hello Once again User" + request.getEmail());
 
 
         return AuthenticationResponse.builder()
