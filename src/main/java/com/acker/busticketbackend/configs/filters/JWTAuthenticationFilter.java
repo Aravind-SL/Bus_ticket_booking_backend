@@ -1,6 +1,6 @@
 package com.acker.busticketbackend.configs.filters;
 
-import com.acker.busticketbackend.services.JWTService;
+import com.acker.busticketbackend.auth.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

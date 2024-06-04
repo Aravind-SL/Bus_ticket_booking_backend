@@ -2,7 +2,8 @@ package com.acker.busticketbackend.buses;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.acker.busticketbackend.routes.RoutesRepository;
+import com.acker.busticketbackend.routes.RoutesService;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class BusService {
-    @Autowired
     private final BusRepository busRepository;
+
+    private final RoutesService routesService;
 
     public List<Bus> getAllBuses() {
         return busRepository.findAll();
@@ -22,10 +24,21 @@ public class BusService {
                 .orElseThrow(() -> new RuntimeException("Bus not found"));
     }
 
-    public Bus createBus(Bus bus) {
+    /* Creates New Bus */
+    public Bus createBus(AddBusRequest busRequest) {
+
+        Bus bus = Bus.builder()
+                .route(routesService.getRouteById(busRequest.getRouteId()))
+                .busNumber(busRequest.getBusNumber())
+                .arrivalTime(busRequest.getArrivalTime())
+                .departureTime(busRequest.getDepartureTime())
+                .totalSeats(busRequest.getTotalSeats())
+                .build();
+
         return busRepository.save(bus);
     }
-    //Requires FineTuning now it requires all parameter to update 
+
+    //Requires FineTuning now it requires all parameter to update
     public Bus updateBus(Long busID, Bus busDetails) {
         Bus bus = getBusById(busID);
         bus.setBusNumber(busDetails.getBusNumber());
