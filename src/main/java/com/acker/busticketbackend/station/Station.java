@@ -35,10 +35,4 @@ public class Station {
     @Column(nullable = false)
     private String state;
 
-    @OneToMany(mappedBy = "fromStation")
-    private List<Routes> routesFrom;
-
-    @OneToMany(mappedBy = "toStation")
-    private List<Routes> routesTo;
-
 }

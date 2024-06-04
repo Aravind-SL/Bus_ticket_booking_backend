@@ -31,13 +31,11 @@ public class Routes {
     @Column(unique = true, nullable = false)
     private Long routeId;
 
-    @ManyToOne
-    @JoinColumn(name = "fromStationId", nullable = false)
-    private Station fromStation;
+    @Column(name = "fromStationId", nullable = false)
+    private Long fromStation;
 
-    @ManyToOne
-    @JoinColumn(name = "toStationId", nullable = false)
-    private Station toStation;
+    @Column(name = "toStationId", nullable = false)
+    private Long toStation;
 
     @Column(nullable = false)
     private double distance;
