@@ -1,9 +1,12 @@
 package com.acker.busticketbackend.buses;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.acker.busticketbackend.routes.RoutesRepository;
 import com.acker.busticketbackend.routes.RoutesService;
+import com.acker.busticketbackend.seats.Seats;
+import com.acker.busticketbackend.seats.SeatsRepository;
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,8 @@ public class BusService {
     private final BusRepository busRepository;
 
     private final RoutesService routesService;
+
+    private final SeatsRepository seatsRepository;
 
     public List<Bus> getAllBuses() {
         return busRepository.findAll();
@@ -26,7 +31,6 @@ public class BusService {
 
     /* Creates New Bus */
     public Bus createBus(AddBusRequest busRequest) {
-
         Bus bus = Bus.builder()
                 .route(routesService.getRouteById(busRequest.getRouteId()))
                 .busNumber(busRequest.getBusNumber())
@@ -35,7 +39,21 @@ public class BusService {
                 .totalSeats(busRequest.getTotalSeats())
                 .build();
 
-        return busRepository.save(bus);
+        List<Seats> seats = new ArrayList<>();
+        for (int i = 1; i <= busRequest.getTotalSeats(); i++) {
+            Seats seat = Seats.builder()
+                    .bus(bus)
+                    .seatNumber(i)
+                    .isAvailable(true)
+                    .build();
+            seats.add(seat);
+        }
+        bus.setSeats(seats);
+
+        Bus savedBus = busRepository.save(bus);
+        seatsRepository.saveAll(seats);  
+
+        return savedBus;
     }
 
     //Requires FineTuning now it requires all parameter to update
