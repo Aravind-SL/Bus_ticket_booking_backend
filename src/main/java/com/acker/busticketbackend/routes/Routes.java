@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Routes {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
     private Long routeId;
 
@@ -39,8 +39,5 @@ public class Routes {
 
     @Column(nullable = false)
     private double distance;
-
-    @OneToMany(mappedBy = "route")
-    private List<Bus> buses;
 
 }

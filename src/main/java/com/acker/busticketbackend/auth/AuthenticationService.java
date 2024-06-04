@@ -5,7 +5,6 @@ import com.acker.busticketbackend.exceptions.UserAlreadyExistException;
 import com.acker.busticketbackend.auth.user.Role;
 import com.acker.busticketbackend.auth.user.User;
 import com.acker.busticketbackend.auth.user.UserRepository;
-import com.acker.busticketbackend.services.JWTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
