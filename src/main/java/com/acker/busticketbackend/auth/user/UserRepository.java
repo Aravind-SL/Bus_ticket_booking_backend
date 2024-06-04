@@ -1,4 +1,4 @@
-package com.acker.busticketbackend.models.user;
+package com.acker.busticketbackend.auth.user;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
