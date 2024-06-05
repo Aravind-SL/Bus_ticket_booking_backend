@@ -1,8 +1,8 @@
 package com.acker.busticketbackend.booking;
 
 import com.acker.busticketbackend.buses.BusRepository;
-import com.acker.busticketbackend.seats.Seats;
-import com.acker.busticketbackend.seats.SeatsRepository;
+import com.acker.busticketbackend.buses.Seats;
+import com.acker.busticketbackend.buses.SeatsRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

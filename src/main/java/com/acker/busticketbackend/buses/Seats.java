@@ -1,6 +1,5 @@
-package com.acker.busticketbackend.seats;
+package com.acker.busticketbackend.buses;
 
-import com.acker.busticketbackend.buses.Bus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;

@@ -11,10 +11,11 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddBusRequest {
+public class AddUpdateBusRequest {
     private int busNumber;
     private long routeId;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
     private int totalSeats;
+    private float pricePerUnitDistance;
 }
