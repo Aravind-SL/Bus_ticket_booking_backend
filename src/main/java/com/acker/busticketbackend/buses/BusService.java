@@ -7,6 +7,8 @@ import com.acker.busticketbackend.routes.RoutesService;
 import com.acker.busticketbackend.seats.Seats;
 import com.acker.busticketbackend.seats.SeatsRepository;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -20,16 +22,18 @@ public class BusService {
 
     private final SeatsRepository seatsRepository;
 
+    @Transactional
     public List<Bus> getAllBuses() {
         return busRepository.findAll();
     }
 
+    @Transactional
     public Bus getBusById(Long busID) {
         return busRepository.findById(busID)
                 .orElseThrow(() -> new RuntimeException("Bus not found"));
     }
 
-    /* Creates New Bus */
+    @Transactional
     public Bus createBus(AddBusRequest busRequest) {
         Bus bus = Bus.builder()
                 .route(routesService.getRouteById(busRequest.getRouteId()))
@@ -57,6 +61,7 @@ public class BusService {
     }
 
     //Requires FineTuning now it requires all parameter to update
+    @Transactional
     public Bus updateBus(Long busID, Bus busDetails) {
         Bus bus = getBusById(busID);
         bus.setBusNumber(busDetails.getBusNumber());
@@ -67,6 +72,7 @@ public class BusService {
         return busRepository.save(bus);
     }
 
+    @Transactional
     public void deleteBus(Long busID) {
         Bus bus = getBusById(busID);
         busRepository.delete(bus);
