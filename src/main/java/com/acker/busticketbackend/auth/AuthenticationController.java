@@ -6,7 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.acker.busticketbackend.exceptions.UserNotFoundException;
+
+import jakarta.mail.MessagingException;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,6 +39,28 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request
     ) {
         return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> sendOtp(@RequestBody ForgotPasswordRequest request) {
+        try {
+            service.sendOtp(request.getEmail());
+            return ResponseEntity.ok("OTP sent to email");
+        } catch (UserNotFoundException | MessagingException exception) {
+            return ResponseEntity.status(404).body(exception.getMessage());
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
+        try {
+            service.resetPassword(request.getEmail(), request.getOtp(), request.getNewPassword());
+            return ResponseEntity.ok("Password reset successfully");
+        } catch (UserNotFoundException exception) {
+            return ResponseEntity.status(404).body(exception.getMessage());
+        } catch (RuntimeException exception) {
+            return ResponseEntity.status(400).body(exception.getMessage());
+        }
     }
 
 
