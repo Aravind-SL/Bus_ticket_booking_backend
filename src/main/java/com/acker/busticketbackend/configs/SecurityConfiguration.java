@@ -32,6 +32,7 @@ public class SecurityConfiguration {
             "/api/v1/auth/**", // For authentication
             "/demo", // Testing endpoint
             "/error", // This one right here is freaking important, DO NOT forget this at all.
+            "/admin/**", // TODO: Needed to be removed after frontend
     };
 
 

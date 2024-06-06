@@ -38,7 +38,7 @@ public class BusController {
         return ResponseEntity.ok(busService.updateBus(id, busDetails));
     }
 
-    @PatchMapping("/{id")
+    @PatchMapping("/{id}")
     public ResponseEntity<Bus> updateBusFare(@PathVariable Long id, @RequestBody UpdateFareRequest newFare) {
         return ResponseEntity.ok(busService.updateBusFare(id, newFare));
     }
