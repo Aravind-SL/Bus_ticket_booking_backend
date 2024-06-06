@@ -1,6 +1,5 @@
 package com.acker.busticketbackend.booking;
 
-import com.acker.busticketbackend.buses.BusRepository;
 import com.acker.busticketbackend.seats.Seats;
 import com.acker.busticketbackend.seats.SeatsRepository;
 import jakarta.transaction.Transactional;
@@ -16,7 +15,6 @@ import java.util.UUID;
 public class BookingService {
 
     private final BookingRepository bookingRepository;
-    private final BusRepository busRepository;
     private final SeatsRepository seatsRepository;
 
     @Transactional
