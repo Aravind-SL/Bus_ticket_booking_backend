@@ -13,8 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddBookingRequest {
-    private int userId;
-    private int busNumber;
+    private long busNumber;
     private List<Integer> seatIds;
     private LocalDateTime journeyDate;
 }

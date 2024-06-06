@@ -1,11 +1,12 @@
 package com.acker.busticketbackend.buses;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.acker.busticketbackend.routes.RoutesService;
-import com.acker.busticketbackend.seats.Seats;
-import com.acker.busticketbackend.seats.SeatsRepository;
 
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class BusService {
     }
 
     /* Creates New Bus */
-    public Bus createBus(AddBusRequest busRequest) {
+    public Bus createBus(AddUpdateBusRequest busRequest) {
         Bus bus = Bus.builder()
                 .route(routesService.getRouteById(busRequest.getRouteId()))
                 .busNumber(busRequest.getBusNumber())
@@ -51,24 +52,43 @@ public class BusService {
         bus.setSeats(seats);
 
         Bus savedBus = busRepository.save(bus);
-        seatsRepository.saveAll(seats);  
+        seatsRepository.saveAll(seats);
 
         return savedBus;
     }
 
     //Requires FineTuning now it requires all parameter to update
-    public Bus updateBus(Long busID, Bus busDetails) {
+    // FineTuning ???
+    public Bus updateBus(Long busID, AddUpdateBusRequest busDetails) {
         Bus bus = getBusById(busID);
         bus.setBusNumber(busDetails.getBusNumber());
-        bus.setRoute(busDetails.getRoute());
+        bus.setRoute(routesService.getRouteById(busDetails.getRouteId()));
         bus.setDepartureTime(busDetails.getDepartureTime());
         bus.setArrivalTime(busDetails.getArrivalTime());
         bus.setTotalSeats(busDetails.getTotalSeats());
+        bus.setPricePerUnitDistance(busDetails.getPricePerUnitDistance());
         return busRepository.save(bus);
     }
 
+    /**
+     * Deletes the bus from the database
+     *
+     * @param busID the id of the bus that should be deleted.
+     */
     public void deleteBus(Long busID) {
         Bus bus = getBusById(busID);
         busRepository.delete(bus);
+    }
+
+    /**
+     * Returns new Bus object with new fare.
+     *
+     * @param id      the id of the bus.
+     * @param newFare the body of the request with new pricePerUnitDistance
+     */
+    public Bus updateBusFare(Long id, UpdateFareRequest newFare) {
+        Bus bus = getBusById(id);
+        bus.setPricePerUnitDistance(newFare.getPricePerUnitDistance());
+        return busRepository.save(bus);
     }
 }

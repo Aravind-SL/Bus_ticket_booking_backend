@@ -28,14 +28,19 @@ public class BusController {
     }
 
     @PostMapping
-    public ResponseEntity<Bus> createBus(@RequestBody AddBusRequest bus) {
+    public ResponseEntity<Bus> createBus(@RequestBody AddUpdateBusRequest bus) {
         System.out.println(bus);
         return new ResponseEntity<>(busService.createBus(bus), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Bus> updateBus(@PathVariable Long id, @RequestBody Bus busDetails) {
+    public ResponseEntity<Bus> updateBus(@PathVariable Long id, @RequestBody AddUpdateBusRequest busDetails) {
         return ResponseEntity.ok(busService.updateBus(id, busDetails));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Bus> updateBusFare(@PathVariable Long id, @RequestBody UpdateFareRequest newFare) {
+        return ResponseEntity.ok(busService.updateBusFare(id, newFare));
     }
 
     @DeleteMapping("/{id}")

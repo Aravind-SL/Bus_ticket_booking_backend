@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.acker.busticketbackend.routes.Routes;
-import com.acker.busticketbackend.seats.Seats;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -34,25 +33,48 @@ public class Bus {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(unique = true, nullable = false)
     private Long busId;
-    @Column(nullable=false)
+
+    /**
+     * The Bus Number
+     */
+    @Column(nullable = false)
     private int busNumber;
 
+    /**
+     * The Route of the Bus
+     */
     @ManyToOne
     @JoinColumn(name = "routeID", nullable = false)
     private Routes route;
 
-    @Column(nullable=false)
+    /**
+     * The time the bus leaves the station
+     */
+    @Column(nullable = false)
     private LocalDateTime departureTime;
 
-    @Column(nullable=false)
+    /**
+     * The time the bus arrives the destination
+     */
+    @Column(nullable = false)
     private LocalDateTime arrivalTime;
 
-    @Column(nullable=false)
+    /**
+     * Total number of bookable seats
+     */
+    @Column(nullable = false)
     private int totalSeats;
-    
 
+    /**
+     * The Bookable seats
+     */
     @OneToMany(mappedBy = "bus", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Seats> seats;
 
+    /**
+     * The price of the ride in this for a unit distance. It determines the booking price
+     */
+    @Column(nullable = false)
+    private float pricePerUnitDistance;
 }
