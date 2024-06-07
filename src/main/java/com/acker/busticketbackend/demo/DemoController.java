@@ -8,6 +8,7 @@ public class DemoController {
 
     @GetMapping("/demo")
     public String working() {
+        System.out.println("Demo Working");
         return "Working Route";
     }
 }

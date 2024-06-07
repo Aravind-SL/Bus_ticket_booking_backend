@@ -1,9 +1,6 @@
 package com.acker.busticketbackend.buses;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.acker.busticketbackend.routes.RoutesService;
@@ -40,7 +37,11 @@ public class BusService {
                 .totalSeats(busRequest.getTotalSeats())
                 .build();
 
-        List<Seats> seats = new ArrayList<>();
+        // Create Bus
+        busRepository.save(bus);
+
+        // Add Seats
+        Set<Seats> seats = new HashSet<>();
         for (int i = 1; i <= busRequest.getTotalSeats(); i++) {
             Seats seat = Seats.builder()
                     .bus(bus)
@@ -49,12 +50,10 @@ public class BusService {
                     .build();
             seats.add(seat);
         }
-        bus.setSeats(seats);
 
-        Bus savedBus = busRepository.save(bus);
-        seatsRepository.saveAll(seats);
+        bus.setSeats(seatsRepository.saveAll(seats));
 
-        return savedBus;
+        return busRepository.save(bus);
     }
 
     //Requires FineTuning now it requires all parameter to update
