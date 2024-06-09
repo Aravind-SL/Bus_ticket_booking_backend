@@ -17,5 +17,5 @@ public class AddUpdateBusRequest {
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
     private int totalSeats;
-    private float pricePerUnitDistance;
+    private Double pricePerUnitDistance;
 }

@@ -80,5 +80,5 @@ public class Bus {
      * The price of the ride in this for a unit distance. It determines the booking price
      */
     @Column(nullable = false)
-    private float pricePerUnitDistance;
+    private Double pricePerUnitDistance;
 }
