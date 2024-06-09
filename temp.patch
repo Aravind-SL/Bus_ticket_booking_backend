@@ -1,0 +1,56 @@
+diff --git a/src/main/java/com/acker/busticketbackend/booking/Booking.java b/src/main/java/com/acker/busticketbackend/booking/Booking.java
+index 5c59a2e..fc3385e 100644
+--- a/src/main/java/com/acker/busticketbackend/booking/Booking.java
++++ b/src/main/java/com/acker/busticketbackend/booking/Booking.java
+@@ -28,18 +28,15 @@ public class Booking {
+     @Column(unique = true, nullable = false)
+     private String id;
+ 
+-    @Column(nullable = false)
+     @ManyToOne
+     private User user;
+ 
+-    @Column(nullable = false)
++    //    @Column(nullable = false)
+     @ManyToOne
+     @JoinColumn(name = "busId", nullable = false)
+     private Bus bus;
+ 
+-    @ManyToMany
+-    @Column(nullable = false)
+-    @JoinColumn(name = "seatsId", nullable = false)
++    @ManyToMany(mappedBy = "bookings")
+     @JsonManagedReference
+     private List<Seats> seats;
+ 
+diff --git a/src/main/java/com/acker/busticketbackend/buses/Seats.java b/src/main/java/com/acker/busticketbackend/buses/Seats.java
+index 5885f8e..97d5a29 100644
+--- a/src/main/java/com/acker/busticketbackend/buses/Seats.java
++++ b/src/main/java/com/acker/busticketbackend/buses/Seats.java
+@@ -1,5 +1,6 @@
+ package com.acker.busticketbackend.buses;
+ 
++import com.acker.busticketbackend.booking.Booking;
+ import com.fasterxml.jackson.annotation.JsonBackReference;
+ 
+ import jakarta.persistence.*;
+@@ -8,6 +9,8 @@ import lombok.Builder;
+ import lombok.Data;
+ import lombok.NoArgsConstructor;
+ 
++import java.util.List;
++
+ @Entity
+ @Data
+ @Builder
+@@ -26,6 +29,10 @@ public class Seats {
+     @JsonBackReference
+     private Bus bus;
+ 
++    @ManyToMany
++    @JsonBackReference
++    private List<Booking> bookings;
++
+     @Column(nullable = false)
+     private int seatNumber;
+ 
