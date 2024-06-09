@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateFareRequest {
-    private float pricePerUnitDistance;
+    private Double pricePerUnitDistance;
 }

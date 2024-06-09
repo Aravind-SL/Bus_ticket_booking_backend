@@ -29,38 +29,43 @@ public class BookingService {
         LocalDateTime bookingDate = LocalDateTime.now();
 
         // Take the user detail from the security context
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        System.out.println("Here");
-
-        Bus bus = busService.getBusById(busId);
-        System.out.println(bus);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // Get the bus object
-//        Set<Seats> requestedSeats = new HashSet<>(seatsRepository.findAllById(requestedSeatIds));
-//        System.out.println(requestedSeats);
+        Bus bus = busService.getBusById(busId);
 
-        // TODO: Do a check for availability of the seats.
+        // Check for availability of the seats on the specified journey date
+        Set<Seats> requestedSeats = new HashSet<>();
+        for (Integer seatId : requestedSeatIds) {
+            Seats seat = seatsRepository.findById(seatId).orElseThrow(() -> new RuntimeException("Seat not found: " + seatId));
+            if (isSeatAvailable(seat, journeyDate)) {
+                requestedSeats.add(seat);
+            } else {
+                throw new RuntimeException("Seat not available: " + seatId);
+            }
+        }
 
         // Create Booking
         Booking booking = Booking.builder()
                 .user(user)
                 .bus(bus)
+                .seats(requestedSeats)
                 .bookingDate(bookingDate)
                 .journeyDate(journeyDate)
                 .status(BookingStatus.PENDING)
                 .build();
 
-        System.out.println(booking);
-
-        // Set the seats to not available
-//        requestedSeats.forEach(seat -> seat.setAvailable(false));
-//
-//        seatsRepository.saveAll(
-//                requestedSeats
-//        );
+        // Save the booking and update seat availability
+        requestedSeats.forEach(seat -> {
+            seat.setAvailable(false);
+            seatsRepository.save(seat);
+        });
 
         return bookingRepository.save(booking);
+    }
+
+    private boolean isSeatAvailable(Seats seat, LocalDateTime journeyDate) {
+        return bookingRepository.findByBusAndSeatsAndJourneyDate(seat.getBus(), seat, journeyDate).isEmpty();
     }
 
 

@@ -1,8 +1,8 @@
 package com.acker.busticketbackend.buses;
 
-import com.acker.busticketbackend.booking.Booking;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.Set;
 
+import com.acker.busticketbackend.booking.Booking;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -11,8 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Data
@@ -29,17 +27,15 @@ public class Seats {
 
     @ManyToOne
     @JoinColumn(name = "busId", nullable = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
     private Bus bus;
-
-    @ManyToMany
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private List<Booking> bookings;
 
     @Column(nullable = false)
     private int seatNumber;
+
+    @ManyToMany(mappedBy = "seats")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private Set<Booking> bookings;
 
     @Column(nullable = false)
     private boolean isAvailable;

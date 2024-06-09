@@ -1,7 +1,6 @@
 package com.acker.busticketbackend.buses;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.acker.busticketbackend.routes.RoutesService;
 
@@ -35,6 +34,7 @@ public class BusService {
                 .arrivalTime(busRequest.getArrivalTime())
                 .departureTime(busRequest.getDepartureTime())
                 .totalSeats(busRequest.getTotalSeats())
+                .pricePerUnitDistance(busRequest.getPricePerUnitDistance())
                 .build();
 
         // Create Bus
