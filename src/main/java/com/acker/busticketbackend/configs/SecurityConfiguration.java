@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -56,11 +57,13 @@ public class SecurityConfiguration {
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .cors(Customizer.withDefaults());
 
         // Build the Security Chain
         return http.build();
     }
+
 
     // Enable CORS
     @Bean
@@ -70,13 +73,15 @@ public class SecurityConfiguration {
 
 
         // Allow Origins
-        corsConfiguration.setAllowedOrigins(List.of("*")); // This Allows All, Should be set to frontend url.
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173")); // This Allows All, Should be set to frontend url.
 
         // Methods
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST")); // These two are enough for now.
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "OPTION", "PATCH", "DELETE", "PUT")); // These two are enough for now.
 
         // Allow Headers
-        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
+                "Access-Control-Request-Headers"));
+        corsConfiguration.setExposedHeaders(List.of("Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
 
         // This the CorsConfiguration Source.
         UrlBasedCorsConfigurationSource corsConfigurationSource =
