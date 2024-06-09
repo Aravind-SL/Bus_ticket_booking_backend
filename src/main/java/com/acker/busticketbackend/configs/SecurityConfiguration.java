@@ -1,10 +1,12 @@
 package com.acker.busticketbackend.configs;
 
+import com.acker.busticketbackend.auth.user.Role;
 import com.acker.busticketbackend.configs.filters.JWTAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,11 +30,14 @@ public class SecurityConfiguration {
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
 
     private static final String[] WHITE_LIST = {
-            "/api/v1/**", // TODO: Remove before prod
             "/api/v1/auth/**", // For authentication
+            "/api/v1/routes/**",
+            "/api/v1/buses/**",
+            "/api/v1/stations/**",
             "/demo", // Testing endpoint
             "/error", // This one right here is freaking important, DO NOT forget this at all.
             "/admin/**", // TODO: Needed to be removed after frontend
+            "/actuator/**",
     };
 
 
@@ -44,6 +49,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         (auth) -> auth
                                 .requestMatchers(WHITE_LIST).permitAll() // Allows the url without any authentication
+                                .requestMatchers("/api/v1/bookings/**").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
                                 .anyRequest().authenticated() // Authenticate the rest
                 )
                 .sessionManagement(
@@ -51,11 +57,13 @@ public class SecurityConfiguration {
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .cors(Customizer.withDefaults());
 
         // Build the Security Chain
         return http.build();
     }
+
 
     // Enable CORS
     @Bean
@@ -65,13 +73,15 @@ public class SecurityConfiguration {
 
 
         // Allow Origins
-        corsConfiguration.setAllowedOrigins(List.of("*")); // This Allows All, Should be set to frontend url.
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173")); // This Allows All, Should be set to frontend url.
 
         // Methods
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST")); // These two are enough for now.
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "OPTION", "PATCH", "DELETE", "PUT")); // These two are enough for now.
 
         // Allow Headers
-        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
+                "Access-Control-Request-Headers"));
+        corsConfiguration.setExposedHeaders(List.of("Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
 
         // This the CorsConfiguration Source.
         UrlBasedCorsConfigurationSource corsConfigurationSource =

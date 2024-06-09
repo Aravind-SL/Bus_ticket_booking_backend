@@ -4,12 +4,16 @@ package com.acker.busticketbackend.booking;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 import com.acker.busticketbackend.auth.user.User;
 import com.acker.busticketbackend.buses.Bus;
 import com.acker.busticketbackend.buses.Seats;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,23 +29,26 @@ import lombok.NoArgsConstructor;
 public class Booking {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(unique = true, nullable = false)
     private String id;
 
-    @Column(nullable = false)
     @ManyToOne
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private User user;
 
-    @Column(nullable = false)
+    //    @Column(nullable = false)
     @ManyToOne
     @JoinColumn(name = "busId", nullable = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Bus bus;
 
-    @ManyToMany
-    @Column(nullable = false)
-    @JoinColumn(name = "seatsId", nullable = false)
-    @JsonManagedReference
-    private List<Seats> seats;
+    @ManyToMany(mappedBy = "bookings")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private Set<Seats> seats;
 
     @Column(nullable = false)
     private LocalDateTime bookingDate;
