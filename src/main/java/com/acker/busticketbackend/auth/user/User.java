@@ -1,4 +1,4 @@
-package com.acker.busticketbackend.models.user;
+package com.acker.busticketbackend.auth.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @Builder
 @Entity
-@Table(name="_user")
+@Table(name = "_user")
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
@@ -28,7 +28,7 @@ public class User implements UserDetails {
     @GeneratedValue
     private Integer id;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String firstName;
 
 
@@ -37,7 +37,7 @@ public class User implements UserDetails {
     @Column(unique = true, length = 100, nullable = false)
     private String email;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -45,11 +45,11 @@ public class User implements UserDetails {
 
 
     @CreationTimestamp
-    @Column(updatable = false, name="created_at")
+    @Column(updatable = false, name = "created_at")
     private Date createdAt;
 
     @UpdateTimestamp
-    @Column(name="updated_at")
+    @Column(name = "updated_at")
     private Date updatedAt;
 
 

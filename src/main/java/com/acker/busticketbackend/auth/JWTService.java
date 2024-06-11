@@ -1,4 +1,4 @@
-package com.acker.busticketbackend.services;
+package com.acker.busticketbackend.auth;
 
 
 import io.jsonwebtoken.Claims;
@@ -43,7 +43,7 @@ public class JWTService {
         return claimsResolver.apply(claims);
     }
 
-    public  String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
@@ -52,20 +52,20 @@ public class JWTService {
             UserDetails userDetails
     ) {
         return Jwts
-            .builder()
-            .setClaims(additionalClaims)
-            .setSubject(userDetails.getUsername())
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 3600 * 2))
-            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-            .compact();
+                .builder()
+                .setClaims(additionalClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 3600 * 2))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = getUsername(token);
 
-        return (username.equals(userDetails.getUsername())) && isTokenExpired(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
 
     }
 
@@ -73,11 +73,11 @@ public class JWTService {
         return extractExpiration(token).before(new Date());
     }
 
-    private Date extractExpiration(String token){
+    private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private Key getSigningKey(){
+    private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
