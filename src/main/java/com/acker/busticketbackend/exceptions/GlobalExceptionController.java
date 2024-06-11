@@ -1,25 +1,21 @@
 package com.acker.busticketbackend.exceptions;
 
+import java.time.OffsetDateTime;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class GlobalExceptionController {
-    @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<String>handleUserAlreadyExistException(UserAlreadyExistException e){
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(PasswordMismatchException.class)
-    public ResponseEntity<String>handlePasswordMismatchException(PasswordMismatchException e){
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException e) {
-        return new ResponseEntity<>("Invalid email or password", HttpStatus.FORBIDDEN);
-    }
+public class GlobalExceptionController extends ResponseEntityExceptionHandler {
+   @ExceptionHandler(UserAlreadyExistException.class)
+   ProblemDetail userNotFoundException(UserAlreadyExistException e){
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
+        problemDetail.setTitle("User Already Exist");
+        // problemDetail.setType(URI.create("https://example.com/something-not-found"));
+        problemDetail.setProperty("timestamp", OffsetDateTime.now());
+        return problemDetail;
+   }
 }
