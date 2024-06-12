@@ -32,9 +32,4 @@ public class Seats {
     @Column(nullable = false)
     private int seatNumber;
 
-    @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private Set<SeatBooking> seatBookings;
-
 }

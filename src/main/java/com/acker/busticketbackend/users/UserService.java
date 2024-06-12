@@ -5,19 +5,14 @@ import com.acker.busticketbackend.auth.user.UserRepository;
 import com.acker.busticketbackend.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
 
     /**

@@ -75,9 +75,8 @@ public class BookingService {
         return seatBookingRepository.findByBusAndSeatAndJourneyDate(seat.getBus(), seat, journeyDate).isEmpty();
     }
 
-    public List<Seats> getBookedSeats(long busId, LocalDateTime journeyDate) {
-        Bus bus = busService.getBusById(busId);
-        return seatBookingRepository.findBookedSeatsByBusAndJourneyDate(bus, journeyDate);
+    public List<SeatBooking> getBookedSeats() {
+        return seatBookingRepository.findAll();
     }
 
     public Booking completeBooking(String bookingId, BookingStatus status) {
