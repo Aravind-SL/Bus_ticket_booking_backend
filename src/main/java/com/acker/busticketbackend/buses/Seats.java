@@ -2,7 +2,7 @@ package com.acker.busticketbackend.buses;
 
 import java.util.Set;
 
-import com.acker.busticketbackend.booking.Booking;
+import com.acker.busticketbackend.booking.SeatBooking;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -32,11 +32,9 @@ public class Seats {
     @Column(nullable = false)
     private int seatNumber;
 
-    @ManyToMany(mappedBy = "seats")
+    @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private Set<Booking> bookings;
+    private Set<SeatBooking> seatBookings;
 
-    @Column(nullable = false)
-    private boolean isAvailable;
 }

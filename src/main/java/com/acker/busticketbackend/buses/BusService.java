@@ -46,7 +46,6 @@ public class BusService {
             Seats seat = Seats.builder()
                     .bus(bus)
                     .seatNumber(i)
-                    .isAvailable(true)
                     .build();
             seats.add(seat);
         }

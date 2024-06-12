@@ -12,10 +12,25 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionController extends ResponseEntityExceptionHandler {
    @ExceptionHandler(UserAlreadyExistException.class)
    ProblemDetail userNotFoundException(UserAlreadyExistException e){
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
         problemDetail.setTitle("User Already Exist");
-        // problemDetail.setType(URI.create("https://example.com/something-not-found"));
         problemDetail.setProperty("timestamp", OffsetDateTime.now());
         return problemDetail;
+   }
+
+   @ExceptionHandler(PasswordMismatchException.class)
+   ProblemDetail passwordMismatchException(PasswordMismatchException e){
+      ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail((HttpStatus.FORBIDDEN), e.getMessage());
+      problemDetail.setTitle("Password Mismatch");
+      problemDetail.setProperty("timestamp", OffsetDateTime.now());
+      return problemDetail;
+   }
+
+   @ExceptionHandler(UserNotFoundException.class)
+   ProblemDetail userNotFoundException(UserNotFoundException e){
+      ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+      problemDetail.setTitle("User Email Does not exist");
+      problemDetail.setProperty("timestamp", OffsetDateTime.now());
+      return problemDetail;
    }
 }

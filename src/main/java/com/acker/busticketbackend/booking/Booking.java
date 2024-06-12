@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.acker.busticketbackend.auth.user.User;
 import com.acker.busticketbackend.buses.Bus;
-import com.acker.busticketbackend.buses.Seats;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -40,16 +39,11 @@ public class Booking {
     @JsonIdentityReference(alwaysAsId = true)
     private Bus bus;
 
-    @ManyToMany
-    @JoinTable(
-        name = "booking_seats",
-        joinColumns = @JoinColumn(name = "booking_id"),
-        inverseJoinColumns = @JoinColumn(name = "seat_id")
-    )
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Builder.Default
-    private Set<Seats> seats = new HashSet<>();
+    private Set<SeatBooking> seatBookings = new HashSet<>();
 
     @Column(nullable = false)
     private LocalDateTime bookingDate;

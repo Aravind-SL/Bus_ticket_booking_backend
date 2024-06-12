@@ -19,10 +19,9 @@ import java.util.Set;
 public class BookingService {
 
     private final BookingRepository bookingRepository;
+    private final SeatBookingRepository seatBookingRepository;
     private final SeatsRepository seatsRepository;
-
     private final BusService busService;
-
 
     public Booking createBooking(long busId, List<Integer> requestedSeatIds, LocalDateTime journeyDate) {
         LocalDateTime bookingDate = LocalDateTime.now();
@@ -36,7 +35,8 @@ public class BookingService {
         // Check for availability of the seats on the specified journey date
         Set<Seats> requestedSeats = new HashSet<>();
         for (Integer seatId : requestedSeatIds) {
-            Seats seat = seatsRepository.findById(seatId).orElseThrow(() -> new RuntimeException("Seat not found: " + seatId));
+            Seats seat = seatsRepository.findById(seatId)
+                    .orElseThrow(() -> new RuntimeException("Seat not found: " + seatId));
             if (isSeatAvailable(seat, journeyDate)) {
                 requestedSeats.add(seat);
             } else {
@@ -48,34 +48,38 @@ public class BookingService {
         Booking booking = Booking.builder()
                 .user(user)
                 .bus(bus)
-                .seats(requestedSeats)
                 .bookingDate(bookingDate)
                 .journeyDate(journeyDate)
                 .status(BookingStatus.PENDING)
                 .build();
 
-        // Save the booking and update seat availability
-        requestedSeats.forEach(seat -> {
-            seat.setAvailable(false);
-            seatsRepository.save(seat);
-        });
+        // Save the booking
+        Booking savedBooking = bookingRepository.save(booking);
 
-        return bookingRepository.save(booking);
+        // Create and save SeatBooking entries
+        for (Seats seat : requestedSeats) {
+            SeatBooking seatBooking = SeatBooking.builder()
+                    .booking(savedBooking)
+                    .bus(bus)
+                    .seat(seat)
+                    .journeyDate(journeyDate)
+                    .build();
+            seatBookingRepository.save(seatBooking);
+        }
+
+        return savedBooking;
     }
+
 
     private boolean isSeatAvailable(Seats seat, LocalDateTime journeyDate) {
-        return bookingRepository.findByBusAndSeatsAndJourneyDate(seat.getBus(), seat, journeyDate).isEmpty();
+        return seatBookingRepository.findByBusAndSeatAndJourneyDate(seat.getBus(), seat, journeyDate).isEmpty();
     }
 
+    public List<Seats> getBookedSeats(long busId, LocalDateTime journeyDate) {
+        Bus bus = busService.getBusById(busId);
+        return seatBookingRepository.findBookedSeatsByBusAndJourneyDate(bus, journeyDate);
+    }
 
-    /**
-     * Returns the booking with its final status.
-     * Should be used with payment service.
-     *
-     * @Param bookingId the id of the booking
-     * @Param status the final status of the booking (Fail or Complete)
-     * @Return the final booking object
-     */
     public Booking completeBooking(String bookingId, BookingStatus status) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking Not exists: " + bookingId));
@@ -87,5 +91,4 @@ public class BookingService {
         booking.setStatus(status);
         return bookingRepository.save(booking);
     }
-
 }
