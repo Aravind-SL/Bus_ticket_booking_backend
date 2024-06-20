@@ -1,7 +1,5 @@
 package com.acker.busticketbackend.booking;
 
-import com.acker.busticketbackend.buses.Bus;
-import com.acker.busticketbackend.buses.Seats;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,22 +17,20 @@ import java.time.LocalDateTime;
 public class SeatBooking {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "bus_id", nullable = false)
-    private Bus bus;
+    @JoinColumn(name = "booking_id", nullable = false)
+    private Booking booking;
 
-    @ManyToOne
-    @JoinColumn(name = "seat_id", nullable = false)
-    private Seats seat;
+    @Column(name = "bus_id", nullable = false)
+    private Long busId;
+
+    @Column(name = "seat_number", nullable = false)
+    private int seatNumber;
 
     @Column(nullable = false)
     private LocalDateTime journeyDate;
-
-    @ManyToOne
-    @JoinColumn(name = "booking_id", nullable = false)
-    private Booking booking;
 }

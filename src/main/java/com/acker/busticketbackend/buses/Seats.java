@@ -1,11 +1,6 @@
 package com.acker.busticketbackend.buses;
 
-import java.util.Set;
-
-import com.acker.busticketbackend.booking.SeatBooking;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,9 +22,9 @@ public class Seats {
 
     @ManyToOne
     @JoinColumn(name = "busId", nullable = false)
+    @JsonBackReference
     private Bus bus;
 
     @Column(nullable = false)
     private int seatNumber;
-
 }

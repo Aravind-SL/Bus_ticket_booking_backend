@@ -5,6 +5,8 @@ import com.acker.busticketbackend.buses.Bus;
 import com.acker.busticketbackend.buses.BusService;
 import com.acker.busticketbackend.buses.Seats;
 import com.acker.busticketbackend.buses.SeatsRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,10 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final SeatBookingRepository seatBookingRepository;
-    private final SeatsRepository seatsRepository;
     private final BusService busService;
+    private final SeatsRepository seatsRepository;
 
+    @Transactional
     public Booking createBooking(long busId, List<Integer> requestedSeatIds, LocalDateTime journeyDate) {
         LocalDateTime bookingDate = LocalDateTime.now();
 
@@ -60,8 +63,8 @@ public class BookingService {
         for (Seats seat : requestedSeats) {
             SeatBooking seatBooking = SeatBooking.builder()
                     .booking(savedBooking)
-                    .bus(bus)
-                    .seat(seat)
+                    .busId(bus.getBusId())
+                    .seatNumber(seat.getSeatNumber())
                     .journeyDate(journeyDate)
                     .build();
             seatBookingRepository.save(seatBooking);
@@ -70,15 +73,15 @@ public class BookingService {
         return savedBooking;
     }
 
-
-    private boolean isSeatAvailable(Seats seat, LocalDateTime journeyDate) {
-        return seatBookingRepository.findByBusAndSeatAndJourneyDate(seat.getBus(), seat, journeyDate).isEmpty();
-    }
-
     public List<SeatBooking> getBookedSeats() {
         return seatBookingRepository.findAll();
     }
 
+    private boolean isSeatAvailable(Seats seat, LocalDateTime journeyDate) {
+        List<SeatBooking> bookings = seatBookingRepository.findByBusIdAndSeatNumberAndJourneyDate(seat.getBus().getBusId(), seat.getSeatNumber(), journeyDate);
+        return bookings.isEmpty();
+    }
+    
     public Booking completeBooking(String bookingId, BookingStatus status) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking Not exists: " + bookingId));

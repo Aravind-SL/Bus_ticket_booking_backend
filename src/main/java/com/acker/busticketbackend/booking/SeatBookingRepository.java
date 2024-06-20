@@ -1,16 +1,13 @@
 package com.acker.busticketbackend.booking;
 
-import com.acker.busticketbackend.buses.Bus;
-import com.acker.busticketbackend.buses.Seats;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
 public interface SeatBookingRepository extends JpaRepository<SeatBooking, Long> {
 
-    @Query("SELECT sb FROM SeatBooking sb WHERE sb.bus = :bus AND sb.seat = :seat AND sb.journeyDate = :journeyDate")
-    List<SeatBooking> findByBusAndSeatAndJourneyDate(@Param("bus") Bus bus, @Param("seat") Seats seat, @Param("journeyDate") LocalDateTime journeyDate);
+    List<SeatBooking> findByBusIdAndSeatNumberAndJourneyDate(Long busId, int seatNumber, LocalDateTime journeyDate);
 }
