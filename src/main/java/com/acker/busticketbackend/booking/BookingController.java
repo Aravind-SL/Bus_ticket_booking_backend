@@ -21,11 +21,15 @@ public class BookingController {
                 addBookingRequest.getSeatIds(),
                 addBookingRequest.getJourneyDate()
         );
+
+        System.out.println(booking);
+
         return new ResponseEntity<>(booking, HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<SeatBooking>> getBookings() {
+
         return ResponseEntity.ok(bookingService.getBookedSeats());
     }
 }

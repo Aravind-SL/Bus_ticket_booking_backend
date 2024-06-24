@@ -23,7 +23,6 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
@@ -57,9 +56,7 @@ public class SecurityConfiguration {
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(Customizer.withDefaults());
-
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         // Build the Security Chain
         return http.build();
     }
@@ -73,7 +70,7 @@ public class SecurityConfiguration {
 
 
         // Allow Origins
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173")); // This Allows All, Should be set to frontend url.
+        corsConfiguration.setAllowedOrigins(List.of("*")); // This Allows All, Should be set to frontend url.
 
         // Methods
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "OPTION", "PATCH", "DELETE", "PUT")); // These two are enough for now.

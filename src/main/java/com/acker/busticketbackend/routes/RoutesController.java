@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/routes")
+@CrossOrigin(maxAge = 3600)
 public class RoutesController {
 
     @Autowired

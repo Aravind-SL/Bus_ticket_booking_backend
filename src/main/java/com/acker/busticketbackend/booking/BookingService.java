@@ -35,6 +35,7 @@ public class BookingService {
         // Get the bus object
         Bus bus = busService.getBusById(busId);
 
+
         // Check for availability of the seats on the specified journey date
         Set<Seats> requestedSeats = new HashSet<>();
         for (Integer seatId : requestedSeatIds) {
@@ -70,6 +71,7 @@ public class BookingService {
             seatBookingRepository.save(seatBooking);
         }
 
+
         return savedBooking;
     }
 
@@ -81,7 +83,7 @@ public class BookingService {
         List<SeatBooking> bookings = seatBookingRepository.findByBusIdAndSeatNumberAndJourneyDate(seat.getBus().getBusId(), seat.getSeatNumber(), journeyDate);
         return bookings.isEmpty();
     }
-    
+
     public Booking completeBooking(String bookingId, BookingStatus status) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking Not exists: " + bookingId));

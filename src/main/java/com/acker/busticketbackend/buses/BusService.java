@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.acker.busticketbackend.routes.RoutesService;
 
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -88,5 +89,17 @@ public class BusService {
         Bus bus = getBusById(id);
         bus.setPricePerUnitDistance(newFare.getPricePerUnitDistance());
         return busRepository.save(bus);
+    }
+
+    public List<Bus> searchBusesByRoute(Integer startStation, Integer destinationStation) {
+
+        var route = routesService.getByStationId(startStation, destinationStation);
+        System.out.println(route);
+
+        if (route.isEmpty())
+            return List.of();
+
+
+        return busRepository.findByRoutes(route.get());
     }
 }

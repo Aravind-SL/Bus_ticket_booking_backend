@@ -1,9 +1,12 @@
 package com.acker.busticketbackend.routes;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoutesService {
@@ -35,5 +38,9 @@ public class RoutesService {
     public void deleteRoute(Long routeId) {
         Routes route = getRouteById(routeId);
         routeRepository.delete(route);
+    }
+
+    public Optional<Routes> getByStationId(Integer start, Integer destination) {
+        return routeRepository.findRouteFromStationToStation(start, destination);
     }
 }

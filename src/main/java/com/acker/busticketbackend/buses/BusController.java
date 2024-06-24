@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/buses")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequiredArgsConstructor
 public class BusController {
 
@@ -27,9 +28,13 @@ public class BusController {
         return ResponseEntity.ok(busService.getBusById(id));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Bus>> searchBus(@RequestParam Integer start, @RequestParam Integer destination) {
+        return ResponseEntity.ok(busService.searchBusesByRoute(start, destination));
+    }
+
     @PostMapping
     public ResponseEntity<Bus> createBus(@RequestBody AddUpdateBusRequest bus) {
-        System.out.println(bus);
         return new ResponseEntity<>(busService.createBus(bus), HttpStatus.CREATED);
     }
 
