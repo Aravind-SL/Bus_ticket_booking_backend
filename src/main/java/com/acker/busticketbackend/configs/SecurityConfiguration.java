@@ -56,7 +56,8 @@ public class SecurityConfiguration {
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .cors(Customizer.withDefaults());
         // Build the Security Chain
         return http.build();
     }
@@ -76,7 +77,7 @@ public class SecurityConfiguration {
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "OPTION", "PATCH", "DELETE", "PUT")); // These two are enough for now.
 
         // Allow Headers
-        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method",
                 "Access-Control-Request-Headers"));
         corsConfiguration.setExposedHeaders(List.of("Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
 

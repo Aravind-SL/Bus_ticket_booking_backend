@@ -1,6 +1,7 @@
 package com.acker.busticketbackend.buses;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import com.acker.busticketbackend.routes.Routes;
@@ -31,11 +32,11 @@ public class Bus {
     @JoinColumn(name = "routeID", nullable = false)
     private Routes route;
 
-    @Column(nullable = false)
-    private LocalDateTime departureTime;
+    @Column(nullable = false, columnDefinition = "TIME")
+    private LocalTime departureTime;
 
-    @Column(nullable = false)
-    private LocalDateTime arrivalTime;
+    @Column(nullable = false, columnDefinition = "TIME")
+    private LocalTime arrivalTime;
 
     @Column(nullable = false)
     private int totalSeats;
