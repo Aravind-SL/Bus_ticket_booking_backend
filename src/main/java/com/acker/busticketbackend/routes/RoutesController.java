@@ -16,25 +16,32 @@ public class RoutesController {
     private RoutesService routeService;
 
     @GetMapping
-    public ResponseEntity<List<Routes>> getAllRoutes() {
+    public ResponseEntity<List<RouteResponse>> getAllRoutes() {
         return ResponseEntity.ok(routeService.getAllRoutes());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Routes> getRouteById(@PathVariable Long id) {
-        return ResponseEntity.ok(routeService.getRouteById(id));
+    public ResponseEntity<RouteResponse> getRouteById(@PathVariable Long id) {
+        var rou = routeService.getRouteById(id);
+        return ResponseEntity.ok(RouteResponse.builder()
+                .fromStation(Math.toIntExact(rou.getFromStation().getStationId()))
+                .toStation(Math.toIntExact(rou.getToStation().getStationId()))
+                .distance(rou.getDistance())
+                .routeId(Math.toIntExact(rou.getRouteId()))
+                .build()
+        );
     }
 
     @PostMapping
-    public ResponseEntity<?> createRoute(@RequestBody Routes route) {
+    public ResponseEntity<?> createRoute(@RequestBody AddUpdateRouteRequest route) {
         if (route.getFromStation() == null) {
             return ResponseEntity.badRequest().body("fromStation cannot be null");
         }
-        return new ResponseEntity<>(routeService.createRoute(route), HttpStatus.CREATED);
+        return new ResponseEntity<RouteResponse>(routeService.createRoute(route), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateRoute(@PathVariable Long id, @RequestBody Routes routeDetails) {
+    public ResponseEntity<?> updateRoute(@PathVariable Long id, @RequestBody AddUpdateRouteRequest routeDetails) {
         if (routeDetails.getFromStation() == null) {
             return ResponseEntity.badRequest().body("fromStation cannot be null");
         }

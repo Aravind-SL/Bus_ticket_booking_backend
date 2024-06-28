@@ -1,11 +1,7 @@
 package com.acker.busticketbackend.routes;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.acker.busticketbackend.station.Station;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,11 +19,13 @@ public class Routes {
     @Column(unique = true, nullable = false)
     private Long routeId;
 
-    @Column(name = "fromStationId", nullable = false)
-    private Long fromStation;
+    @ManyToOne
+    @JoinColumn(name = "fromStation", nullable = false)
+    private Station fromStation;
 
-    @Column(name = "toStationId", nullable = false)
-    private Long toStation;
+    @ManyToOne
+    @JoinColumn(name = "toStation", nullable = false)
+    private Station toStation;
 
     @Column(nullable = false)
     private double distance;
