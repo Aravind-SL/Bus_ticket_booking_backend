@@ -1,7 +1,9 @@
 package com.acker.busticketbackend.booking;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.acker.busticketbackend.auth.user.User;
@@ -35,7 +37,7 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "busId", nullable = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "busId")
     @JsonIdentityReference(alwaysAsId = true)
     private Bus bus;
 
@@ -43,13 +45,13 @@ public class Booking {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Builder.Default
-    private Set<SeatBooking> seatBookings = new HashSet<>();
+    private List<SeatBooking> seatBookings = List.of();
 
-    @Column(nullable = false)
-    private LocalDateTime bookingDate;
+    @Column(nullable = false, columnDefinition = "DATE")
+    private LocalDate bookingDate;
 
-    @Column(nullable = false)
-    private LocalDateTime journeyDate;
+    @Column(nullable = false, columnDefinition = "DATE")
+    private LocalDate journeyDate;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)

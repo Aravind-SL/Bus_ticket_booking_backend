@@ -1,12 +1,15 @@
 package com.acker.busticketbackend.booking;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -23,6 +26,8 @@ public class SeatBooking {
 
     @ManyToOne
     @JoinColumn(name = "booking_id", nullable = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Booking booking;
 
     @Column(name = "bus_id", nullable = false)
@@ -32,5 +37,5 @@ public class SeatBooking {
     private int seatNumber;
 
     @Column(nullable = false)
-    private LocalDateTime journeyDate;
+    private LocalDate journeyDate;
 }
