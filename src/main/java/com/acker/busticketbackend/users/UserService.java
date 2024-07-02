@@ -6,6 +6,7 @@ import com.acker.busticketbackend.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -43,7 +44,7 @@ public class UserService {
 
     public ListUserResponse getAllUsers() {
         var users = StreamSupport.stream(userRepository.findAll().spliterator(), false)
-                .map(user -> UserListItem.builder()
+                .map(user -> UserResponse.builder()
                         .firstName(user.getFirstName())
                         .lastName(user.getLastName())
                         .id(user.getId())

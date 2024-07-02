@@ -9,15 +9,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Entity
 @Data
-@Builder
-@Table(name = "seat_bookings")
 @AllArgsConstructor
 @NoArgsConstructor
-public class SeatBooking {
+@Builder
+public class BookingProcessingResponse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,19 +22,14 @@ public class SeatBooking {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "booking_id", nullable = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Booking booking;
 
-    @Column(name = "bus_id", nullable = false)
-    private Long busId;
-
-    @Column(name = "seat_number", nullable = false)
-    private int seatNumber;
+    @Column(nullable = false)
+    private String message;
 
     @Column(nullable = false)
-    private LocalDate journeyDate;
+    private boolean approved;
 
-    private boolean approved = false;
 }

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ListUserResponse {
 
-    Iterable<UserListItem> users;
+    Iterable<UserResponse> users;
 
 }
 

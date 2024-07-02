@@ -13,9 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,7 +24,7 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final SeatBookingRepository seatBookingRepository;
     private final BusService busService;
-    private final SeatsRepository seatsRepository;
+    private final BookingProcessingResponseRepository bookingProcessingResponseRepository;
 
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
@@ -103,23 +102,70 @@ public class BookingService {
         return bookings.isEmpty();
     }
 
-    public Booking completeBooking(String bookingId, BookingStatus status) {
+    public BookingProcessingResponse completeBooking(String bookingId, boolean approve, String message) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking Not exists: " + bookingId));
 
-        if (status == BookingStatus.PENDING) {
-            throw new RuntimeException("Give an Invalid State to set" + status);
-        }
+        booking.setStatus(approve ? BookingStatus.COMPLETE : BookingStatus.FAILURE);
 
-        booking.setStatus(status);
-        return bookingRepository.save(booking);
+        var seatBookings = booking.getSeatBookings();
+        seatBookings.forEach(sb -> sb.setApproved(approve));
+        seatBookingRepository.saveAll(seatBookings);
+
+        BookingProcessingResponse res = BookingProcessingResponse.builder()
+                .booking(booking)
+                .approved(approve)
+                .message(message)
+                .build();
+
+        bookingRepository.save(booking);
+
+        return bookingProcessingResponseRepository.save(res);
+    }
+
+    public DailyBookingStatus getAvailableSeats(Long busId, LocalDate date) {
+        Bus b = busService.getBusById(busId);
+        var totalSeats = b.getTotalSeats();
+        var res = seatBookingRepository.getAvailableSeatsOnDate(busId, date);
+        System.out.println(res.getBookedSeats());
+        
+        return DailyBookingStatus.builder()
+                .busId(b.getBusId())
+                .seatsAvailable(totalSeats - res.getBookedSeats())
+                .date(date)
+                .build();
     }
 
     public List<DailyBookingStatus> getNextNDayBooking(Long busId, LocalDate fromDate, int days) {
 
-
-        return seatBookingRepository.getDailyBookingWithinRange(
-                busId, fromDate, fromDate.plusDays(days)
+        Bus b = busService.getBusById(busId);
+        var totalSeats = b.getTotalSeats();
+        var res = seatBookingRepository.getDailyBookingWithinRange(
+                busId, fromDate.plusDays(1), fromDate.plusDays(days + 1)
         );
+
+        var bookedByDate = new HashMap<LocalDate, Integer>();
+
+        res.forEach(
+                stat -> bookedByDate.put(stat.getJourneyDate(), stat.getBookedSeats())
+        );
+
+        List<DailyBookingStatus> seatStat = new java.util.ArrayList<>(List.of());
+
+        System.out.println(bookedByDate);
+        for (int i = 0; i < days; i++) {
+            seatStat.add(
+                    DailyBookingStatus.builder()
+                            .busId(busId)
+                            .seatsAvailable(
+                                    totalSeats - bookedByDate.getOrDefault(
+                                            fromDate.plusDays(1 + i), 0))
+                            .date(fromDate.plusDays(1 + i))
+                            .build()
+            );
+
+        }
+
+        return seatStat;
     }
 }

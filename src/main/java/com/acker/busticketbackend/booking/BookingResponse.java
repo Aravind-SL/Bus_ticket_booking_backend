@@ -1,6 +1,7 @@
 package com.acker.busticketbackend.booking;
 
 import com.acker.busticketbackend.auth.user.User;
+import com.acker.busticketbackend.users.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder
@@ -17,7 +17,7 @@ import java.util.Set;
 public class BookingResponse {
 
     private String id;
-    private Integer userId;
+    private UserResponse user;
     private List<SeatBooking> seatBookings;
     private LocalDate bookingDate;
     private LocalDate journeyDate;
@@ -25,3 +25,5 @@ public class BookingResponse {
     private Long busId;
 
 }
+
+

@@ -14,5 +14,5 @@ import java.time.LocalDate;
 public class DailyBookingStatus {
     private Long busId;
     private LocalDate date;
-    private int availableSeats;
+    private Integer seatsAvailable;
 }
