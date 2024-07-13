@@ -74,6 +74,10 @@ public class BookingService {
         return savedBooking;
     }
 
+    public List<Booking> getUserBookings(User user) {
+
+        return bookingRepository.findByUser(user);
+    }
 
     public List<Seats> getAvailableSeats(
             Bus bus, LocalDate journeyDate, int n) throws InsufficientSeatsException {
@@ -128,7 +132,7 @@ public class BookingService {
         var totalSeats = b.getTotalSeats();
         var res = seatBookingRepository.getAvailableSeatsOnDate(busId, date);
         System.out.println(res.getBookedSeats());
-        
+
         return DailyBookingStatus.builder()
                 .busId(b.getBusId())
                 .seatsAvailable(totalSeats - res.getBookedSeats())

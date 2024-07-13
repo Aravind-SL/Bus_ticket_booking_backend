@@ -12,4 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserDetailResponse {
 
     private String username;
+
+
+    private String firstName, lastName;
 }

@@ -28,6 +28,8 @@ public class UserService {
 
         return UserDetailResponse.builder()
                 .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .build();
     }
 
@@ -38,6 +40,8 @@ public class UserService {
 
         return UserDetailResponse.builder()
                 .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .build();
     }
 

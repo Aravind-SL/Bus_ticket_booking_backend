@@ -1,9 +1,11 @@
 package com.acker.busticketbackend.booking;
 
+import com.acker.busticketbackend.auth.user.User;
 import com.acker.busticketbackend.users.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -44,6 +46,20 @@ public class BookingController {
                 .status(booking.getStatus())
                 .user(user)
                 .seatBookings(booking.getSeatBookings()).build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<List<BookingResponse>> getUserBookings() {
+
+        var user = (User) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+
+        return ResponseEntity.ok(
+                bookingService.getUserBookings(user)
+                        .stream()
+                        .map(this::bookingToResponse)
+                        .toList()
+        );
     }
 
     @GetMapping
