@@ -17,6 +17,7 @@ public class AddUpdateBusRequest {
     private long routeId;
     private LocalTime departureTime;
     private LocalTime arrivalTime;
+
     private int totalSeats;
     private Double pricePerUnitDistance;
 }

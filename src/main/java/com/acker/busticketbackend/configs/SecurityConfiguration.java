@@ -71,13 +71,14 @@ public class SecurityConfiguration {
 
 
         // Allow Origins
-        corsConfiguration.setAllowedOrigins(List.of("*")); // This Allows All, Should be set to frontend url.
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173")); // This Allows All, Should be set to frontend url.
 
         // Methods
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "OPTION", "PATCH", "DELETE", "PUT")); // These two are enough for now.
 
         // Allow Headers
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method",
+
                 "Access-Control-Request-Headers"));
         corsConfiguration.setExposedHeaders(List.of("Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
 

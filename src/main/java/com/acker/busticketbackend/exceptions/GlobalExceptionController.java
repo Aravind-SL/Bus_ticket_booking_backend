@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 public class GlobalExceptionController extends ResponseEntityExceptionHandler {
+
     @ExceptionHandler(UserAlreadyExistException.class)
     ProblemDetail userNotFoundException(UserAlreadyExistException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
@@ -42,4 +43,5 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler {
         return problemDetail;
 
     }
+
 }

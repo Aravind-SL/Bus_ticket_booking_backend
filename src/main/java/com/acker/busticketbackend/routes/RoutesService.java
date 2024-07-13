@@ -9,11 +9,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class RoutesService {
 
     @Autowired
     private RoutesRepository routeRepository;
+
     @Autowired
     private StationService stationService;
 
@@ -79,7 +81,6 @@ public class RoutesService {
         Routes route = getRouteById(routeId);
         routeRepository.delete(route);
     }
-
     public Optional<Routes> getByStationId(Integer start, Integer destination) {
 
         var startStation = stationService.getStationById((long) start);

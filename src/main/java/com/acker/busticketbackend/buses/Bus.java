@@ -8,6 +8,7 @@ import java.util.Set;
 import com.acker.busticketbackend.routes.Routes;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +29,7 @@ public class Bus {
 
     @Column(nullable = false)
     private int busNumber;
-
+  
     @ManyToOne
     @JoinColumn(name = "routeID", nullable = false)
     private Routes route;
@@ -45,7 +46,7 @@ public class Bus {
     @OneToMany(mappedBy = "bus", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Seats> seats;
-
+  
     @Column(nullable = false)
     private Double pricePerUnitDistance;
 }

@@ -11,7 +11,6 @@ import java.util.Optional;
 @Repository
 public interface RoutesRepository extends JpaRepository<Routes, Long> {
 
-
     @Query("SELECT r FROM Routes r where r.fromStation = ?1 and r.toStation = ?2")
     Optional<Routes> findRouteFromStationToStation(Station fromStationId, Station toStationId);
 }

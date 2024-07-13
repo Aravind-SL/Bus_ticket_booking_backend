@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AddBookingRequest {
     private long busId;
+
     private int numberOfSeats;
     private LocalDate journeyDate;
 }

@@ -35,6 +35,7 @@ public class BusController {
 
     @PostMapping
     public ResponseEntity<Bus> createBus(@RequestBody AddUpdateBusRequest bus) {
+
         return new ResponseEntity<>(busService.createBus(bus), HttpStatus.CREATED);
     }
 

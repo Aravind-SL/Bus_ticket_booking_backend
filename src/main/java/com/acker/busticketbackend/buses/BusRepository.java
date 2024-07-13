@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface BusRepository extends JpaRepository<Bus, Long> {
     @Query("SELECT b FROM Bus b WHERE b.route = ?1")
     List<Bus> findByRoutes(Routes routes);
+
 }
