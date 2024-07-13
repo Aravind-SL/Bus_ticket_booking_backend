@@ -26,7 +26,12 @@ public class BusService {
                 .orElseThrow(() -> new RuntimeException("Bus not found"));
     }
 
-    /* Creates New Bus */
+    /**
+     * Creates new bus and save it in the busRepository
+     *
+     * @param busRequest The body of the request that has required information to create a bus
+     * @return The created bus
+     */
     public Bus createBus(AddUpdateBusRequest busRequest) {
         Bus bus = Bus.builder()
                 .route(routesService.getRouteById(busRequest.getRouteId()))
@@ -46,7 +51,6 @@ public class BusService {
             Seats seat = Seats.builder()
                     .bus(bus)
                     .seatNumber(i)
-                    .isAvailable(true)
                     .build();
             seats.add(seat);
         }
@@ -56,15 +60,20 @@ public class BusService {
         return busRepository.save(bus);
     }
 
-    //Requires FineTuning now it requires all parameter to update
-    // FineTuning ???
+    /**
+     * Update the details of the bus. This method will update every
+     * detail of a bus for given busID except for the seats.
+     *
+     * @param busID      The ID of the bus that has to be updated
+     * @param busDetails The new details of the bus
+     * @return The updated bus
+     */
     public Bus updateBus(Long busID, AddUpdateBusRequest busDetails) {
         Bus bus = getBusById(busID);
         bus.setBusNumber(busDetails.getBusNumber());
         bus.setRoute(routesService.getRouteById(busDetails.getRouteId()));
         bus.setDepartureTime(busDetails.getDepartureTime());
         bus.setArrivalTime(busDetails.getArrivalTime());
-        bus.setTotalSeats(busDetails.getTotalSeats());
         bus.setPricePerUnitDistance(busDetails.getPricePerUnitDistance());
         return busRepository.save(bus);
     }
@@ -84,10 +93,29 @@ public class BusService {
      *
      * @param id      the id of the bus.
      * @param newFare the body of the request with new pricePerUnitDistance
+     * @return The bus with updated fare.
      */
     public Bus updateBusFare(Long id, UpdateFareRequest newFare) {
         Bus bus = getBusById(id);
         bus.setPricePerUnitDistance(newFare.getPricePerUnitDistance());
         return busRepository.save(bus);
+    }
+
+    /**
+     * Search for bus by the from and to station
+     *
+     * @param startStation       The start of the ride
+     * @param destinationStation The destination of the ride
+     * @return list of buses that rides from startStation to destinationStation
+     */
+    public List<Bus> searchBusesByRoute(Integer startStation, Integer destinationStation) {
+
+        var route = routesService.getByStationId(startStation, destinationStation);
+
+        if (route.isEmpty())
+            return List.of();
+
+
+        return busRepository.findByRoutes(route.get());
     }
 }

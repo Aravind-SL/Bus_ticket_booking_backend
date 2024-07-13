@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @Builder
@@ -14,8 +15,9 @@ import java.time.LocalDateTime;
 public class AddUpdateBusRequest {
     private int busNumber;
     private long routeId;
-    private LocalDateTime departureTime;
-    private LocalDateTime arrivalTime;
+    private LocalTime departureTime;
+    private LocalTime arrivalTime;
+
     private int totalSeats;
     private Double pricePerUnitDistance;
 }

@@ -38,7 +38,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-
             filterChain.doFilter(request, response);
             return;
         }
@@ -68,7 +67,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
-            System.out.println("Token " + exception.getMessage());
+            System.out.println(exception.getMessage());
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
     }

@@ -1,7 +1,6 @@
 package com.acker.busticketbackend.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,20 +20,15 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity register(
             @RequestBody RegisterRequest request
-    ) {
-        ResponseEntity response = null;
-        try {
-            response = ResponseEntity.ok(service.register(request));
-        } catch (Exception exception) {
-            response = ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(exception.getMessage());
-        }
+    ) throws Exception {
+        ResponseEntity response = ResponseEntity.ok(service.register(request));
         return response;
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticateRequest(
             @RequestBody AuthenticationRequest request
-    ) {
+    ) throws Exception {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
